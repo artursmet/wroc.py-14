@@ -1,0 +1,58 @@
+@font-face {
+font-family: HurmeGeometricSans4;
+src: url("../fonts/HurmeGeometricSans4.otf") format("opentype");
+}
+
+@font-face {
+font-family: HurmeGeometricSans4-Black;
+src: url("../fonts/HurmeGeometricSans4 Black.otf") format("opentype");
+}
+
+body {
+	background: #0c3350 url("logo.png") no-repeat left bottom;
+	background-size: 20%;
+}
+
+.reveal {
+	font-family: HurmeGeometricSans4, 'Source Sans Pro', Helvetica, sans-serif;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+	margin: 0 0 20px 0;
+	color: #fff;
+	font-family: HurmeGeometricSans4-Black, 'Source Sans Pro', Helvetica, sans-serif;
+}
+
+.reveal pre code {
+	background: rgba(255, 255, 255, 0.1);
+	color: #DCDCDC;
+}
+
+.reveal .math-block {
+	display: block;
+	position: relative;
+	width: 90%;
+	margin: 20px auto;
+
+	font-size: 0.55em;
+	font-family: monospace;
+	line-height: 1.2em;
+
+	box-shadow: none;
+
+	display: block;
+	padding: 10px;
+	overflow: auto;
+	max-height: 400px;
+	word-wrap: normal;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reveal .math-block.big {
+	font-size: 1em;
+	padding: 20px;
+}
+
+.reveal section img {
+	box-shadow: none;
+}

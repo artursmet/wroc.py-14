@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Operacje finansowe w Pythonie</title>
+        <link rel="shortcut icon" href="css/favicon.png" />
+
+		<meta name="description" content="Prezentacja na wroc.py o operacjach finansowych w Pythonie">
+		<meta name="author" content="Michał Ociepka">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+        <link rel="stylesheet" href="css/wrocpy.css">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+    <h1>Prices</h1>
+
+    <h3>operacje finansowe w Pythonie</h3>
+
+    <p>
+        <small><a href="http://ociepka.info/">Michał Ociepka</a> / <a
+                href="http://twitter.com/michalociepka">@michalociepka</a></small>
+    </p>
+</section>
+
+<section>
+    <h1>Agenda</h1>
+
+    <ol>
+        <li class="fragment stretch">Dlaczego nie float?</li>
+        <li class="fragment stretch">Decimal na ratunek.</li>
+        <li class="fragment stretch">Na deser Prices.</li>
+    </ol>
+    <aside class="notes">
+        W pierszej części prezentacji omówię dlaczego floaty nie nadają się do obliczeniach cen.
+        Następnym krokiem będzie omówienie w jaki sposób ratują nas Decimale i jakie problemy rozwiązują.
+        I na deser kilka słów o dodatkowej abstrakcji która rozwiązuje problemy na najwyższej warstwie.
+    </aside>
+</section>
+
+<section>
+    <section>
+        <h2>Dlaczego nie float?</h2>
+
+        <pre class="fragment"><code>>>> 0.1
+0.1</code></pre>
+        <pre class="fragment"><code>>>> 0.1 + 0.1
+0.2</code></pre>
+        <pre class="fragment"><code>>>> 0.1 + 0.1 + 0.1</code><code class="fragment">0.30000000000000004</code></pre>
+        <pre class="fragment"><code>>>> '%.53f' % 0.1
+'0.10000000000000000555111512312578270211815834045410156'</code></pre>
+        <aside class="notes">
+            <ul>
+                <li>
+                    Od najmłodszych lat wpajany jest nam system dziesiętny, zaczynamy liczyć na 10 palcach, niestety komputery działają w systemie binarnym.
+                </li>
+                <li>
+                    Konsola pythona nie ułatwia nam zrozumienia problemu.
+                </li>
+                <li>
+                    Co tu właściwie się stało? Konsola nas ztrolowała. Wypisała liczbę 0.1 a w pamięci przechowuje binarną reprezentację jest zupełnie inna.
+                    Niestety przez konsolę wielu programistów pythona zapomina o tym problemie.
+                </li>
+            </ul>
+        <aside>
+    </section>
+
+    <section>
+        <pre><code>>>> 1.1 + 2.2 - 3.3</code><code class="fragment">4.440892098500626e-16</code></pre>
+        <pre class="fragment"><code>0.1 * 10 == sum(0.1 for i in range(10))
+False</code></pre>
+        <aside class="notes">
+            <p>
+                Ok, ale co z tego? Błąd jest rzędu pięcu tryliardowych. Błąd może i być mały ale głównym
+            problemem jest maszyna licząca w naszym mózgu. Widząc takie równanie człowiek nie zastanawia
+            się jak te liczby wyglądają w zapisie binarnym. Na język w tym przypadku ciśnie się zero.
+            </p>
+            <p>
+                W drugim przypadku aż ciśnie się na język odpowiedź true. Przecież od podstawówki nam powtarzają
+            że mnożenie to tylko skrócenie dodawania.
+            </p>
+        </aside>
+    </section>
+
+    <section>
+        <h2>Dlaczego tak się dzieje?</h2>
+        <ul>
+            <li>ograniczona ilość pamięci</li>
+            <li>większość ułamków dziesiętnych nie da się przedstawić za pomocą ułamków binarnych</li>
+        </ul>
+        <!--pre><code>>>> sys.float_info
+sys.float_info(
+    max=1.7976931348623157e+308, max_exp=1024, max_10_exp=308,
+    min=2.2250738585072014e-308, min_exp=-1021, min_10_exp=-307,
+    dig=15, mant_dig=53, epsilon=2.220446049250313e-16, radix=2,
+    rounds=1)</code></pre-->
+
+        <aside class="notes">
+            <p>
+            Ograniczona pamięć nie tyczy się tylko ułamków nie wymiernych ale większości ułamków dziesiętnych.
+            Im większa precyzja która powiązana jest z liczbą pamięci tym mniejszy błąd. Jak wspomniałem wcześniej
+            precyzja floata w pythonie to 53 czyli jest to podwójna precyzja.
+            </p>
+            <p>
+            Ciekawostką jest, że pierwszy standard floating points <b>IEEE 754</b> napisany w 1985r. zakładał możliwość
+            używania artmetyki liczb 2 i 10 ale dopiero w 2005 IBM skonstruował procesor z900 który rzeczywiście
+            działał na liczbach dziesiętnych.
+            </p>
+        </aside>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Moduł decimal w pythonie</h2>
+        <ul>
+            <li><a href="http://speleotrove.com/decimal/">IBM’s General Decimal Arithmetic Specification</a></li>
+            <li>Kontekst:
+            <pre class="stretch"><code class="python">>>> from decimal import getcontext
+>>> getcontext()
+Context(
+    prec=28, rounding=ROUND_HALF_EVEN, Emin=-999999,
+    Emax=999999, capitals=1, clamp=0, flags=[],
+    traps=[InvalidOperation, DivisionByZero, Overflow])</code></pre>
+            </li>
+        </ul>
+        <aside class="notes">
+            Tak jak wspomniałem wcześniej standard IEEE floating points zawierał także specyfikacje
+            dla artmetyki liczb dziesiętnych i właśnie ta specyfikacja została wdrożona w Pythonie.
+
+            Autory posłużyli się specyfikacją od IBM'a która to opisuje także metody które powinny być
+            zaimplementowane.
+        </aside>
+    </section>
+    <section>
+        <h2>Rounding</h2>
+        <h3>ROUND_HALF_EVEN</h3>
+        <pre><code class="python">>>> Decimal('1.5').quantize(Decimal('0'))</code><code class="python fragment">Decimal('2')</code></pre>
+        <pre><code class="python">>>> Decimal('2.5').quantize(Decimal('0'))</code><code class="python fragment">Decimal('2')</code></pre>
+        <h3>ROUND_HALF_UP</h3>
+        <pre><code class="python">>>> Decimal('1.5').quantize(Decimal('0'), ROUND_HALF_UP)</code><code class="python fragment">Decimal('2')</code></pre>
+        <pre><code class="python">>>> Decimal('2.5').quantize(Decimal('0'), ROUND_HALF_UP)</code><code class="python fragment">Decimal('3')</code></pre>
+    </section>
+    <section>
+        <h2>Dlaczego decimal nie traci na wartości</h2>
+        <p class="math-block big">
+            $$W = m \times p^c$$
+        </p>
+        <ul>
+            <li>$W$ - wartość liczby</li>
+            <li>$m$ - mantysa</li>
+            <li>$p$ - podstawa</li>
+            <li>$c$ - cecha</li>
+        </ul>
+        <aside class="notes">
+            Zapis binarny jak i zapis dziesiętny sprowadza się do tego samego wzoru.
+            Z pewnymi założeniami wszystkie liczby wymierne da się zapisać w postaci dwóch liczb całkowitych.
+        </aside>
+    </section>
+    <section>
+        <h2>Zapis liczby</h2>
+        <pre><code>c = -1
+m = -2</code></pre>
+        <p class="math-block fragment">
+            $$W = -2 \times 10^{-1}$$
+        </p>
+        <p class="math-block fragment">
+            $$W = -0.2$$
+        </p>
+        <pre class="fragment"><code>W = (znak, mantysa, cecha)</code></pre>
+        <pre class="fragment"><code>W = (1, 2, -1)</code></pre>
+        <aside class="notes">
+            Dla liczb dziesiętnych podstawa będzie równa 10 a dla liczb binarnych dwa.
+            Znając te założenia liczbę 0.1 możemy zapisać za pomocą liczb -1 oraz 2.
+
+            Chcąc zwiększyć ilość liczb które możemy zapisać w mantysie wyciągniemy znak do osobnego bitu.
+        </aside>
+    </section>
+    <section>
+        <h2>Arytmetyka</h2>
+        <p class="math-block">
+            $$x = 0.1 + 0.01$$
+        </p>
+        <pre class="fragment"><code class="python">x = (0, 1, -1) + (0, 1, -2)</code></pre>
+        <pre class="fragment"><code class="python">x = (0, 10, -2) + (0, 1, -2)</code></pre>
+        <pre class="fragment"><code class="python">x = (0, 11, -2)</code></pre>
+        <p class="math-block fragment">
+            $$x = 0.11$$
+        </p>
+        <aside class="notes">
+            Dzięki takiemu zapisowi wszystkie operacje arytmetyczne sprowadzają się do:
+            sprowadzenia caechy do tej samej wartości,
+            odpowiedniego działania na mantysie,
+            ustawienia odpowiedniego znaku.
+        </aside>
+    </section>
+    <section>
+        <h2>decimal.py</h2>
+        <pre class="stretch"><code class="python">def __add__(self, other, context=None):
+"""Returns self + other.
+
+-INF + INF (or the reverse) cause InvalidOperation errors.
+"""
+other = _convert_other(other)
+if other is NotImplemented:
+    return other
+
+if context is None:
+    context = getcontext()
+
+if self._is_special or other._is_special:
+    ans = self._check_nans(other, context)
+    if ans:
+        return ans
+
+    if self._isinfinity():
+        # If both INF, same sign => same as both, opposite => error.
+        if self._sign != other._sign and other._isinfinity():
+            return context._raise_error(InvalidOperation, '-INF + INF')
+        return Decimal(self)
+    if other._isinfinity():
+        return Decimal(other)  # Can't both be infinity here
+
+exp = min(self._exp, other._exp)
+negativezero = 0
+if context.rounding == ROUND_FLOOR and self._sign != other._sign:
+    # If the answer is 0, the sign should be negative, in this case.
+    negativezero = 1
+
+if not self and not other:
+    sign = min(self._sign, other._sign)
+    if negativezero:
+        sign = 1
+    ans = _dec_from_triple(sign, '0', exp)
+    ans = ans._fix(context)
+    return ans
+if not self:
+    exp = max(exp, other._exp - context.prec-1)
+    ans = other._rescale(exp, context.rounding)
+    ans = ans._fix(context)
+    return ans
+if not other:
+    exp = max(exp, self._exp - context.prec-1)
+    ans = self._rescale(exp, context.rounding)
+    ans = ans._fix(context)
+    return ans
+
+op1 = _WorkRep(self)
+op2 = _WorkRep(other)
+op1, op2 = _normalize(op1, op2, context.prec)
+
+result = _WorkRep()
+if op1.sign != op2.sign:
+    # Equal and opposite
+    if op1.int == op2.int:
+        ans = _dec_from_triple(negativezero, '0', exp)
+        ans = ans._fix(context)
+        return ans
+    if op1.int < op2.int:
+        op1, op2 = op2, op1
+        # OK, now abs(op1) > abs(op2)
+    if op1.sign == 1:
+        result.sign = 1
+        op1.sign, op2.sign = op2.sign, op1.sign
+    else:
+        result.sign = 0
+        # So we know the sign, and op1 > 0.
+elif op1.sign == 1:
+    result.sign = 1
+    op1.sign, op2.sign = (0, 0)
+else:
+    result.sign = 0
+# Now, op1 > abs(op2) > 0
+
+if op2.sign == 0:
+    result.int = op1.int + op2.int
+else:
+    result.int = op1.int - op2.int
+
+result.exp = op1.exp
+ans = Decimal(result)
+ans = ans._fix(context)
+return ans</code></pre>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Python price handling for humans</h2>
+        <p><a href="https://github.com/mirumee/prices">https://github.com/mirumee/prices</a></p>
+        <ul class="fragment">
+            <li>obsługa ceny netto, brutto</li>
+            <li>obsługa zniżek oraz podatków</li>
+            <li>obsługa wielu walut</li>
+            <li>proste debugowanie dzięki historii operacji na obiekcie</li>
+            <li>możliwość definiowania przedziałów cenowych</li>
+        </ul>
+        <aside class="notes">
+            Sam obiekt Prices to zwykła namedtupla która zawiera w sobie, cenę
+            netto, brutto, walute i obiekt historii. Ceny są oczywiście zapisywane
+            jako decimale.
+        </aside>
+    </section>
+
+    <section>
+        <h2>ceny netto, brutto</h2>
+        <pre><code class="python">>>> from prices import Price
+>>> Price('1.99') + Price(50)
+Price('51.99', currency=None)</code></pre>
+        <pre><code class="python">>>> from prices import Price
+>>> price = Price(net='1', gross='1.2') + Price(net=2, gross=4)
+>>> price
+Price(net='3', gross='5.2', currency=None)
+>>> price.net
+Decimal('3')
+>>> price.gross
+Decimal('5.2')
+>>> price.tax
+Decimal('2.2')</code></pre>
+    </section>
+
+    <section>
+        <h2>zniżki oraz podatki</h2>
+        <pre><code class="python">>>> from prices import Price, FixedDiscount
+>>> price = Price('1.99')
+>>> discount = FixedDiscount(Price(1))
+>>> discount.apply(price)
+Price('0.99', currency=None)</code></pre>
+    <pre><code class="python">>>> from prices import Price, LinearTax
+>>> price = Price('1.99')
+>>> tax = LinearTax('0.23', '23% VAT')
+>>> tax.apply(price)
+Price(net='1.99', gross='2.4477', currency=None)</code></pre>
+    </section>
+
+    <section>
+        <h2>wiele walut</h2>
+        <pre><code class="python">>>> from prices import Price
+>>> Price('1.99', currency='PLN')
+Price('1.99', currency='PLN')</code></pre>
+    </section>
+
+    <section>
+        <h2>histora operacji</h2>
+        <pre><code class="python">>>> from prices import Price, LinearTax
+>>> price = Price('1.99') + Price(50) | LinearTax('0.23', '23% VAT')
+>>> inspect_price(price)
+((Price('1.99', currency=None) + Price('50', currency=None)) | LinearTax('0.23', name='23% VAT'))
+        </code></pre>
+    </section>
+
+    <section>
+        <h2>możliwość definiowania przedziałów cenowych</h2>
+        <pre><code class="python">>>> from prices import Price, PriceRange
+>>> price = Price(70)
+>>> price_range = PriceRange(Price(50), Price(100))
+>>> price in price_range
+True</code></pre>
+    </section>
+
+    <section>
+        <h2>Prices na straży</h2>
+
+        <pre><code class="python">>>> Price(1.2)
+__main__:1: RuntimeWarning: You should never use floats when dealing with prices!
+Price('1.1999999999999999555910790149937383830547332763671875', currency=None)</code></pre>
+
+        <pre class="fragment"><code class="python">>>> Decimal('2.5').quantize(Decimal('0'))
+Decimal('2')
+>>> Price('2.5').quantize(Decimal('0'))
+Price('3', currency=None)</code></pre>
+
+        <pre class="fragment"><code class="python">>>> Price(10, currency='USD') + Price(10, currency='PLN')
+ValueError: Cannot add price in 'USD' to 'PLN'</code></pre>
+
+        <pre class="fragment"><code class="python">>>> Price(10, currency='USD') < Price(10, currency='PLN')
+ValueError: Cannot compare prices in 'USD' and 'PLN'</code></pre>
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>Django prices</h2>
+        <p><a href="https://github.com/mirumee/django-prices">https://github.com/mirumee/django-prices</a></p>
+        <ul class="fragment">
+            <li>field oraz model field które działają na prices</li>
+            <li>templatetagi do prostej manipulacji obiektem price w templateach</li>
+            <li>integracja z biblioteką babel</li>
+        </ul>
+    </section>
+    <section>
+        <h3>ModelField</h3>
+        <pre><code class="python">from django.db import models
+
+from django_prices.models import PriceField
+
+class Product(models.Model):
+    name = models.CharField('Name')
+    price = PriceField('Price', currency='BTC')</code></pre>
+        <h3>FormField</h3>
+        <pre><code class="python">from django import forms
+
+from django_prices.forms import PriceField
+
+class ProductForm(forms.Form):
+    name = forms.CharField(label='Name')
+    price = PriceField(label='Price', currency='PLN')</code></pre>
+    </section>
+    <section>
+        
+        <h3>Templatetags</h3>
+        <pre><code class="html">{% load prices %}
+
+<p>
+    Price: {% gross foo.price %}
+    ({% net foo.price %} {% tax foo.price %} tax)
+</p></code></pre>
+        <pre><code class="html">{% load prices_i18n %}
+
+<p>
+    Price: {% gross foo.price %}
+    ({% net foo.price %} {% tax foo.price %} tax)
+</p></code></pre>
+        
+    </section>
+</section>
+
+<section>
+    <section>
+        <h2>django prices openexchangerates</h2>
+        <p><a href="https://github.com/mirumee/django-prices-openexchangerates">https://github.com/mirumee/django-prices-openexchangerates</a></p></a></p>
+        <ul class="fragment">
+            <li>synchronizacja kursu walut z openexchangerates.org</li>
+            <li>proste API do przeliczania obiektów price</li>
+            <li>templatetagi do prostej manipulacji obiektem price w templateach</li>
+        </ul>
+    </section>
+    <section>
+        <h3>Price converting</h3>
+        <pre><code class="python">>>> from prices import Price, inspect_price
+>>> from django_prices_openexchangerates import exchange_currency
+>>> converted_price = exchange_currency(Price(10, currency='USD'), 'EUR')
+>>> converted_price
+Price('8.84040', currency='EUR')
+>>> inspect_price(converted_price)
+(Price('10', currency='USD') | CurrencyConversion('USD', 'EUR', rate=Decimal('0.88404')))</code></pre>
+        <h3>Templatetags</h3>
+        
+        <pre><code class="html">{% load prices_multicurrency %}
+
+<p>
+    Price: {% gross_in_currency foo.price 'USD' %}
+    ({% net_in_currency foo.price 'USD' %}
+    {% tax_in_currency foo.price 'USD' %} tax)
+</p></code></pre>
+        
+    </section>
+</section>
+
+<section data-background="#fff" data-transition="concave">
+    <p>
+        <a href="https://mirumee.com">https://mirumee.com</a><br/>
+        <a href="https://github.com/mirumee">https://github.com/mirumee</a>
+        <img class="" src="https://s3.amazonaws.com/media-p.slid.es/uploads/patrys/images/738003/38c04947816c3728038c4583489cb8bca31a03e1_1012086.png">
+    </p>
+</section>
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+                math: {
+                    mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+                    config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+                },
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/math/math.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
