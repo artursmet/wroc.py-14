@@ -1,4 +1,33 @@
 <section>
-    <h2>setuptools</h2>
-    <h3>pip</h3>
+    <h2>setuptools (pip)</h2>
+    <section>
+    <p>Instalacja pakietu
+    <pre class="code">
+    <code data-trim>
+        $ pip install foo
+    </code>
+    </pre>
+    </p>
+    </section>
+    <section>
+        <pre class="code">
+            <code data-trim>
+                {% include snippets/pip.txt %}
+            </code>
+        </pre>
+    </section>
+    <section style="text-align: left">
+        <p>
+            <ul>
+                <li>Używa repozytorium pakietów PyPI</li>
+                <li>Obsługuje pakiety wheel</li>
+                <li>Jest dużo bardziej rozbudowany od easy_install</li>
+            </ul>
+        </p>
+        <p>
+            <ul>
+                <li>Nie obsługuje pakietów egg</li>
+            </ul>
+        </p>
+    </section>
 </section>

@@ -1,0 +1,119 @@
+<section>
+    <section>
+        <h3>Jak opublikować własny pakiet?</h3>
+        <aside class="notes">
+            <li>Poznaliśmy już wszystkie dostępne narzędzia</li>
+            <li>Zbudujemy teraz własny pakiet i opublikujemy go na PyPI</li>
+        </aside>
+    </section>
+    <section>
+        <pre class="code stretch"><code data-trim>
+            {% include snippets/setup.py %}
+        </code></pre>
+        <aside class="notes">
+            <li>Aby opublikować swój pakiet, po pierwsze potrzebny jest odpowiedni plik setup.py</li>
+            <li>Przyjrzyjmy się mu, zawiera on podstawowe infomacje takie jak, nazwa pakietu, autor, czy wersja</li>
+            <li>Nazwa musi być unikalna na całym PyPI</li>
+            <li>Możemy tutaj zdefiniować również zależności, jak i osobne zalezności dla testów. Co jest przydatne jeśli używamy narzędzi CI</li>
+            <li>Ostatnia sekcja, to klasyfikacja pakietu, pozwala ona na precyzyjne wyszukiwanie i katalogowanie pakietów na PyPI</li>
+            <li>Załóżmy, że nasza biblioteka to czysto pythonowy projekt i chcemy zbudować również pakiet wheel</li>
+        </aside>
+    </section>
+    <section>
+        <h4>setup.cfg</h4>
+        <pre class="code">
+            <code data-trim>
+                {% include snippets/setup.cfg %}
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>W pliku setup.cfg zdefiniujmy że nasz pakiet jest uniwersalny. Tzn kompatybilny z pythonem 2 i 3</li>
+        </aside>
+    </section>
+    <section>
+        <h4>Budowa pakietu</h4>
+        <h6>Początkowa struktura katalogów</h6>
+        <pre class="code">
+            <code data-trim>
+            {% include snippets/initial_file_structure %}
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>Tak wygląda struktura plików pakietu, który chcemy wydać na PyPI</li>
+        </aside>
+    </section>
+    <section>
+        <h4>Budowa pakietu</h4>
+        <pre class="code">
+            <code data-trim>
+                $ python setup.py sdist
+            </code>
+        </pre>
+        <pre class="code">
+            <code data-trim>
+                $ python setup.py bdist_wheel
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>wheel trzeba zainstalować osobno (pip install wheel)</li>
+            <li>Wydanie tych dwóch poleceń utworzy dla nas dwa pliki. Jeden z nich to będą spakowane źródła naszej biblioteki. Drugi to binarny wheel</li>
+            <li>Skoro mamy już pakiet, przejdźmy do publikacji na PyPI</li>
+        </aside>
+    </section>  
+    <section>
+        <h4>Końcowa struktura katalogów</h4>
+        <pre class="code stretch">
+            <code data-trim>
+                {% include snippets/new_file_structure %}
+            </code>
+        </pre>
+    </section>
+    
+
+    <section>
+        <h4>Rejestracja na PyPI</h4>
+        <li>Użyjemy testowego serwera <a href="https://testpypi.python.org/">https://testpypi.python.org/</a>
+        </li>
+    </section>
+    <section>
+        <h4>Plik ~/.pypirc</h4>
+        <pre class="code">
+            <code data-trim>
+                {% include snippets/pypirc %}
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>W pliku pypirc musimy zapisać nasze dane do logowania do PyPI</li>
+            <li>Ostatnia prosta dzieli nas od opublikowania naszego pakietu</li>
+        </aside>
+    </section>
+    <section>
+        <h4>Rejestracja i publikacja pakietu</h4>
+        <pre class="code fragment">
+            <code data-trim>
+                $ python setup.py register -r test
+            </code>
+        </pre>
+        <pre class="code fragment">
+            <code data-trim>
+                $ python setup.py sdist upload -r test
+            </code>
+        </pre>
+        <pre class="code fragment">
+            <code data-trim>
+                $ python setup.py bdist_wheel upload -r test
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>Ostanie kroki to rejestracja naszego pakietu w PyPI oraz upload samych archiwów</li>
+            <li>Po wykonaniu powyższych poleceń, nasz pakiet jest dostępny do instalacji przez pip</li>
+        </aside>
+    </section>
+
+    <section class="stretch">
+        <img src="http://wstaw.org/m/2015/03/29/helloworldtest_0.1.0___Python_Package_Index.png">
+    </section>
+
+    
+
+</section>

@@ -46,7 +46,7 @@
     <h3>Zarządzanie pakietami w Pythonie</h3>
 
     <p>
-        <small>Artur Smęt <a href="mailto:kontakt@artursmet.com">kontakt@artursmet.com</a></small>
+        <small>Artur Smęt <br><a href="mailto:kontakt@artursmet.com">kontakt@artursmet.com</a></small>
     </p>
 </section>
 
@@ -54,13 +54,14 @@
     <h1>Agenda</h1>
 
     <ol>
-        <li class="fragment stretch">Sposoby instacji pakietów</li>
+        <li class="fragment stretch">Od distutils to setuptools</li>
         <li class="fragment stretch">Rodzaje pakietów (egg vs wheel)</li>
-        <li class="fragment stretch">setup.py bez tajemnic</li>
         <li class="fragment stretch">Publikacja pakietu na PyPI</li>
     </ol>
     <aside class="notes">
-        <li>Na początek opowiem o sposobach instalacji pakietów w pythonie, omówię rodzaje pakietów. Później skupię się na tym jak działa PyPI oraz jak opublikować tam własny pakiet</li>
+        <li>Na poczatku opowiem o tym, jak ewoluował system instalacji pakietów w Pythonie</li>
+        <li>Następnie porównam obecnie dostępne formaty pakietów</li>
+        <li>Opowiem również jak przygotować swój pakiet do publikacji na PyPI</li>
     </aside>
 </section>
 
@@ -77,53 +78,358 @@
         <li class="fragment">egg</li>
         <li class="fragment">wheel</li>
     </ul>
+
+    <aside class="notes">
+        <li>Co powinien potrafić dobry instalator pakietów?</li>
+        <li>Po pierwsze, powinien umieć zainstalować pakiet w wersji, w której chcemy</li>
+        <li>Dobrze by było jakby umiał go też usunać, jak również wyświetlić listę aktualnie zainstalowanych pakietów</li>
+        <li>W Pythonie powstało stosunkowo dużo narzędzi, pozwalających na lepsze, lub gorsze zarządzanie pakietami</li>
+    </aside>
 </section>
 
 
 
 <section>
     <h2>distutils</h2>
+
     <section>
-        <li class="fragment">Tworzenie pakietu</li>
-        <pre class="code fragment">
-            <code>$ python setup.py sdist</code>
+        <li class="fragment">Tworzenie pakietu
+            <pre class="code">
+                <code>$ python setup.py sdist</code>
+            </pre>
+            </li>
+            <li class="fragment">Instalacja pakietu
+            <pre class="code">
+                <code>$ python setup.py install</code>
+            </pre>
+        </li>
+        <aside class="notes">
+            <li>Jest to pierwsze podejście do dystrybucji pakietów</li>
+            <li>Wprowadza plik setup.py</li>
+            <li>setup.py może zawierać listę zależności, jednak nic z nią nie robi</li>
+            <li>Brak globalnego repozytorium pakietów</li>
+        </aside>
+    </section>
+
+    <section style="text-align: left">
+        <p>
+            <ul><h6>Zalety</h6>
+                <li>Instaluje pakiety</li>
+                <li>Pozwala zdefiniować listę zależności</li>
+            </ul>
+        </p>
+        <p>
+            <ul class="fragment"><h6>Wady</h6>
+                <li class="fragment">Nie instaluje zależności</li>
+                <li class="fragment">Nie można usunąć pakietu</li>
+                <li class="fragment">Nie można wyświetlić listy zainstalowanych pakietów</li>
+            </ul>
+        </p>
+    </section>
+
+   
+</section>
+
+<section>
+    <h2>setuptools (easy_install)</h2>
+    <section>
+    <p>Instalacja pakietu
+        <pre class="code">
+            <code data-trim>
+                $ easy_install foo
+            </code>
         </pre>
-        <li class="fragment">Instalacja pakietu</li>
-        <pre class="code fragment">
-            <code>$ python setup.py install</code>
-        </pre>
+    </p>
     </section>
     <section>
+        <pre class="code">
+            <code data-trim>
+                $ easy_install requests
+Searching for requests
+Reading https://pypi.python.org/simple/requests/
+Best match: requests 2.6.0
+Downloading https://pypi.python.org/packages/source/r/requests/requests-2.6.0.tar.gz#md5=25287278fa3ea106207461112bb37050
+Processing requests-2.6.0.tar.gz
+Writing /tmp/easy_install-ukAPnp/requests-2.6.0/setup.cfg
+Running requests-2.6.0/setup.py -q bdist_egg --dist-dir /tmp/easy_install-ukAPnp/requests-2.6.0/egg-dist-tmp-WEqEXR
+Adding requests 2.6.0 to easy-install.pth file
+
+Installed /tmp/wrocpy/lib/python2.7/site-packages/requests-2.6.0-py2.7.egg
+Processing dependencies for requests
+Finished processing dependencies for requests
+
+            </code>
+        </pre>
+    </section>
+    <section style="text-align: left">
         <p>
-        <ul><h6>Zalety</h6>
-            <li>Instaluje pakiety</li>
-            <li>Pozwala zdefiniować listę zależności</li>
-        </ul>
+            <ul>
+                <li>Używa repozytorium pakietów PyPI</li>
+                <li>Obsługuje pakiety egg</li>
+            </ul>
         </p>
         <p>
-        <ul class="fragment"><h6>Wady</h6>
-            <li class="fragment">Lista zależności nie jest przetwarzana</li>
-            <li class="fragment">Brak możliwości usunięcia pakietu</li>
-        </ul>
+            <ul>
+                <li>Nie można usunać pakietu</li>
+            </ul>
         </p>
+    </section>
+</section>
+
+
+<section>
+    <h2>setuptools (pip)</h2>
+    <section>
+    <p>Instalacja pakietu
+    <pre class="code">
+    <code data-trim>
+        $ pip install foo
+    </code>
+    </pre>
+    </p>
+    </section>
+    <section>
+        <pre class="code">
+            <code data-trim>
+                $ pip install requests
+Downloading/unpacking requests
+  Downloading requests-2.6.0-py2.py3-none-any.whl (469kB): 469kB downloaded
+Installing collected packages: requests
+Successfully installed requests
+Cleaning up...
+
+            </code>
+        </pre>
+    </section>
+    <section style="text-align: left">
+        <p>
+            <ul>
+                <li>Używa repozytorium pakietów PyPI</li>
+                <li>Obsługuje pakiety wheel</li>
+                <li>Jest dużo bardziej rozbudowany od easy_install</li>
+            </ul>
+        </p>
+        <p>
+            <ul>
+                <li>Nie obsługuje pakietów egg</li>
+            </ul>
+        </p>
+    </section>
+</section>
+
+<section>
+    <h3>Rodzaje pakietów</h3>
+    <section>
+        <h6>egg</h6>
+        <ul>
+            <li>Spakowany pakiet gotowy do użycia</li>
+            <li>Binarny (zawiera również pliki .pyc)</li>
+            <li>Obsługiwany tylko przez easy_install</li>
+        </ul>
+    </section>
+
+    <section>
+        <h6>wheel</h6>
+        <ul>
+            <li>Wprowadzony by zastąpić pakiety egg</li>
+            <li>Binarny (bez plików .pyc)</li>
+            <li>Zdefiniowany przez <a href="https://www.python.org/dev/peps/pep-0427/">PEP 427</a></li>
+        </ul>
     </section>
 
     <aside class="notes">
-        <li>Jest to pierwsze podejście do dystrybucji pakietów</li>
-        <li>Wprowadza plik setup.py</li>
-        <li>setup.py może zawierać listę zależności, jednak nic z nią nie robi</li>
-        <li>Brak globalnego repozytorium pakietów</li>
+        <li>W pythonie występują dwa główne rodzaje pakietów</li>
+        <li>Oba formaty są binarne i zawierają skompilowane rozszerzenia</li>
+        <li>Technicznie, egg oraz wheel to archiwa ZIP</li>
+        <li>egg można importować, wheel nie</li>
+        <li>Wheel jest wersjonowany i ma ujednolicony format nazw</li>
+        <li>Jeśli nie ma wheel dla aktualnej platformy, pip instaluje ze źródeł</li>
     </aside>
+    
 </section>
-
 <section>
-    <h2>setuptools</h2>
-    <h4>easy_install</h4>
-</section>
+    <section>
+        <h3>Jak opublikować własny pakiet?</h3>
+        <aside class="notes">
+            <li>Poznaliśmy już wszystkie dostępne narzędzia</li>
+            <li>Zbudujemy teraz własny pakiet i opublikujemy go na PyPI</li>
+        </aside>
+    </section>
+    <section>
+        <pre class="code stretch"><code data-trim>
+            #! /usr/bin/env python
+from setuptools import setup, find_packages
 
-<section>
-    <h2>setuptools</h2>
-    <h3>pip</h3>
+setup(
+    name='helloworldtest',
+    author='John Doe',
+    author_email='john.doe@somecompany.com',
+    description="My beautiful library",
+    license='MIT',
+    version='0.1.0',
+    url='http://somecompany.com/',
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=[
+        'requests==2.6.0'
+    ],
+    tests_require=[
+        'mock'
+    ],
+    test_suite='helloworldtest.tests.suite',
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ]
+)
+
+        </code></pre>
+        <aside class="notes">
+            <li>Aby opublikować swój pakiet, po pierwsze potrzebny jest odpowiedni plik setup.py</li>
+            <li>Przyjrzyjmy się mu, zawiera on podstawowe infomacje takie jak, nazwa pakietu, autor, czy wersja</li>
+            <li>Nazwa musi być unikalna na całym PyPI</li>
+            <li>Możemy tutaj zdefiniować również zależności, jak i osobne zalezności dla testów. Co jest przydatne jeśli używamy narzędzi CI</li>
+            <li>Ostatnia sekcja, to klasyfikacja pakietu, pozwala ona na precyzyjne wyszukiwanie i katalogowanie pakietów na PyPI</li>
+            <li>Załóżmy, że nasza biblioteka to czysto pythonowy projekt i chcemy zbudować również pakiet wheel</li>
+        </aside>
+    </section>
+    <section>
+        <h4>setup.cfg</h4>
+        <pre class="code">
+            <code data-trim>
+                [wheel]
+universal = 1
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>W pliku setup.cfg zdefiniujmy że nasz pakiet jest uniwersalny. Tzn kompatybilny z pythonem 2 i 3</li>
+        </aside>
+    </section>
+    <section>
+        <h4>Budowa pakietu</h4>
+        <h6>Początkowa struktura katalogów</h6>
+        <pre class="code">
+            <code data-trim>
+            ├── helloworldtest
+│   └── __init__.py
+├── __init__.py
+├── LICENSE.txt
+├── README.txt
+├── setup.cfg
+└── setup.py 
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>Tak wygląda struktura plików pakietu, który chcemy wydać na PyPI</li>
+        </aside>
+    </section>
+    <section>
+        <h4>Budowa pakietu</h4>
+        <pre class="code">
+            <code data-trim>
+                $ python setup.py sdist
+            </code>
+        </pre>
+        <pre class="code">
+            <code data-trim>
+                $ python setup.py bdist_wheel
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>wheel trzeba zainstalować osobno (pip install wheel)</li>
+            <li>Wydanie tych dwóch poleceń utworzy dla nas dwa pliki. Jeden z nich to będą spakowane źródła naszej biblioteki. Drugi to binarny wheel</li>
+            <li>Skoro mamy już pakiet, przejdźmy do publikacji na PyPI</li>
+        </aside>
+    </section>  
+    <section>
+        <h4>Końcowa struktura katalogów</h4>
+        <pre class="code stretch">
+            <code data-trim>
+                ├── build
+│   ├── bdist.linux-x86_64
+│   └── lib.linux-x86_64-2.7
+│       └── helloworldtest
+│           └── __init__.py
+├── dist
+│   ├── helloworldtest-0.1.0-py2.py3-none-any.whl
+│   └── helloworldtest-0.1.0.tar.gz
+├── helloworldtest
+│   └── __init__.py
+├── helloworldtest.egg-info
+│   ├── dependency_links.txt
+│   ├── PKG-INFO
+│   ├── requires.txt
+│   ├── SOURCES.txt
+│   └── top_level.txt
+├── __init__.py
+├── LICENSE.txt
+├── README.txt
+├── setup.cfg
+└── setup.py
+            </code>
+        </pre>
+    </section>
+    
+
+    <section>
+        <h4>Rejestracja na PyPI</h4>
+        <li>Użyjemy testowego serwera <a href="https://testpypi.python.org/">https://testpypi.python.org/</a>
+        </li>
+    </section>
+    <section>
+        <h4>Plik ~/.pypirc</h4>
+        <pre class="code">
+            <code data-trim>
+                [distutils]
+index-servers=
+    test
+
+[test]
+repository = https://testpypi.python.org/pypi
+username = johndoe
+password = somefancypassword
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>W pliku pypirc musimy zapisać nasze dane do logowania do PyPI</li>
+            <li>Ostatnia prosta dzieli nas od opublikowania naszego pakietu</li>
+        </aside>
+    </section>
+    <section>
+        <h4>Rejestracja i publikacja pakietu</h4>
+        <pre class="code fragment">
+            <code data-trim>
+                $ python setup.py register -r test
+            </code>
+        </pre>
+        <pre class="code fragment">
+            <code data-trim>
+                $ python setup.py sdist upload -r test
+            </code>
+        </pre>
+        <pre class="code fragment">
+            <code data-trim>
+                $ python setup.py bdist_wheel upload -r test
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>Ostanie kroki to rejestracja naszego pakietu w PyPI oraz upload samych archiwów</li>
+            <li>Po wykonaniu powyższych poleceń, nasz pakiet jest dostępny do instalacji przez pip</li>
+        </aside>
+    </section>
+
+    <section class="stretch">
+        <img src="http://wstaw.org/m/2015/03/29/helloworldtest_0.1.0___Python_Package_Index.png">
+    </section>
+
+    
+
 </section>
 
 <section data-background="#fff" data-transition="concave">

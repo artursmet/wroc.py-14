@@ -1,0 +1,30 @@
+<section>
+    <h3>Rodzaje pakietów</h3>
+    <section>
+        <h6>egg</h6>
+        <ul>
+            <li>Spakowany pakiet gotowy do użycia</li>
+            <li>Binarny (zawiera również pliki .pyc)</li>
+            <li>Obsługiwany tylko przez easy_install</li>
+        </ul>
+    </section>
+
+    <section>
+        <h6>wheel</h6>
+        <ul>
+            <li>Wprowadzony by zastąpić pakiety egg</li>
+            <li>Binarny (bez plików .pyc)</li>
+            <li>Zdefiniowany przez <a href="https://www.python.org/dev/peps/pep-0427/">PEP 427</a></li>
+        </ul>
+    </section>
+
+    <aside class="notes">
+        <li>W pythonie występują dwa główne rodzaje pakietów</li>
+        <li>Oba formaty są binarne i zawierają skompilowane rozszerzenia</li>
+        <li>Technicznie, egg oraz wheel to archiwa ZIP</li>
+        <li>egg można importować, wheel nie</li>
+        <li>Wheel jest wersjonowany i ma ujednolicony format nazw</li>
+        <li>Jeśli nie ma wheel dla aktualnej platformy, pip instaluje ze źródeł</li>
+    </aside>
+    
+</section>
