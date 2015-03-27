@@ -1,0 +1,13 @@
+$ easy_install requests
+Searching for requests
+Reading https://pypi.python.org/simple/requests/
+Best match: requests 2.6.0
+Downloading https://pypi.python.org/packages/source/r/requests/requests-2.6.0.tar.gz#md5=25287278fa3ea106207461112bb37050
+Processing requests-2.6.0.tar.gz
+Writing /tmp/easy_install-ukAPnp/requests-2.6.0/setup.cfg
+Running requests-2.6.0/setup.py -q bdist_egg --dist-dir /tmp/easy_install-ukAPnp/requests-2.6.0/egg-dist-tmp-WEqEXR
+Adding requests 2.6.0 to easy-install.pth file
+
+Installed /tmp/wrocpy/lib/python2.7/site-packages/requests-2.6.0-py2.7.egg
+Processing dependencies for requests
+Finished processing dependencies for requests

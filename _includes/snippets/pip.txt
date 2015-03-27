@@ -1,0 +1,6 @@
+$ pip install requests
+Downloading/unpacking requests
+  Downloading requests-2.6.0-py2.py3-none-any.whl (469kB): 469kB downloaded
+Installing collected packages: requests
+Successfully installed requests
+Cleaning up...

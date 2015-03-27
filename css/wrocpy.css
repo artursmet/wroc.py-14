@@ -56,3 +56,7 @@ body {
 .reveal section img {
 	box-shadow: none;
 }
+
+.reveal .code {
+  box-shadow: none;
+}

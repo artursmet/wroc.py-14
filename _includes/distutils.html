@@ -1,0 +1,34 @@
+<section>
+    <h2>distutils</h2>
+    <section>
+        <li class="fragment">Tworzenie pakietu</li>
+        <pre class="code fragment">
+            <code>$ python setup.py sdist</code>
+        </pre>
+        <li class="fragment">Instalacja pakietu</li>
+        <pre class="code fragment">
+            <code>$ python setup.py install</code>
+        </pre>
+    </section>
+    <section>
+        <p>
+        <ul><h6>Zalety</h6>
+            <li>Instaluje pakiety</li>
+            <li>Pozwala zdefiniować listę zależności</li>
+        </ul>
+        </p>
+        <p>
+        <ul class="fragment"><h6>Wady</h6>
+            <li class="fragment">Lista zależności nie jest przetwarzana</li>
+            <li class="fragment">Brak możliwości usunięcia pakietu</li>
+        </ul>
+        </p>
+    </section>
+
+    <aside class="notes">
+        <li>Jest to pierwsze podejście do dystrybucji pakietów</li>
+        <li>Wprowadza plik setup.py</li>
+        <li>setup.py może zawierać listę zależności, jednak nic z nią nie robi</li>
+        <li>Brak globalnego repozytorium pakietów</li>
+    </aside>
+</section>
