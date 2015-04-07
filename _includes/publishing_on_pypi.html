@@ -43,6 +43,21 @@
         </aside>
     </section>
     <section>
+        <h4>MANIFEST.in</h4>
+        <li>Pozwala zdefniować które pliki będą zawarte w pakiecie</li>
+        <pre class="code">
+            <code data-trim>
+                {% include snippets/MANIFEST.in %}
+            </code>
+        </pre>
+        <aside class="notes">
+            <li>Opcjonalny</li>
+            <li>Domyślnie wszystkie pliki wywnioskowane na podstawie setup.py</li>
+            <li>graft - załącz pliki rekurencyjnie</li>
+            <li>prune - nie załączaj</li>
+        </aside>
+    </section>
+    <section>
         <h4>Budowa pakietu</h4>
         <pre class="code">
             <code data-trim>
@@ -59,7 +74,7 @@
             <li>Wydanie tych dwóch poleceń utworzy dla nas dwa pliki. Jeden z nich to będą spakowane źródła naszej biblioteki. Drugi to binarny wheel</li>
             <li>Skoro mamy już pakiet, przejdźmy do publikacji na PyPI</li>
         </aside>
-    </section>  
+    </section>
     <section>
         <h4>Końcowa struktura katalogów</h4>
         <pre class="code stretch">
@@ -67,13 +82,19 @@
                 {% include snippets/new_file_structure %}
             </code>
         </pre>
+        <aside class="notes">
+            <li>w katalogu build działa kompilator</li>
+            <li>katalog egg-info zawiera pliki z meta danymi na temat pakietu</li>
+        </aside>
     </section>
-    
 
     <section>
         <h4>Rejestracja na PyPI</h4>
         <li>Użyjemy testowego serwera <a href="https://testpypi.python.org/">https://testpypi.python.org/</a>
         </li>
+        <aside class="notes">
+            Standardowa procedura rejestracji nowego konta użytkownika
+        </aside>
     </section>
     <section>
         <h4>Plik ~/.pypirc</h4>
@@ -113,7 +134,4 @@
     <section class="stretch">
         <img src="http://wstaw.org/m/2015/03/29/helloworldtest_0.1.0___Python_Package_Index.png">
     </section>
-
-    
-
 </section>
